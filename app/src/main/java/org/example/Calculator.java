@@ -15,20 +15,27 @@ public class Calculator {
     public static final double unionDues = 10.00;
     public static final double insuranceCostUnder3Dep = 15.00;
     public static final double insuranceCost3OrMoreDep = 35.00;
+
     public static double calculateGrossPay(double hoursWorked) {
+        return calculateGrossPay(hoursWorked, hourlyRate);
+    }
+
+    public static double calculateGrossPay(double hoursWorked, double payRate) {
         if (hoursWorked <= 40) {
-            return hoursWorked * hourlyRate;
+            return hoursWorked * payRate;
         } else {
-            double regularPay = 40 * hourlyRate;
-            double overtimePay = (hoursWorked - 40) * hourlyRate * overtimeMultiplier;
+            double regularPay = 40 * payRate;
+            double overtimePay = (hoursWorked - 40) * payRate * overtimeMultiplier;
             return regularPay + overtimePay;
         }
     }
+
     public static double calculateDeductions(double grossPay, int dependents) {
+        int normalizedDependents = Math.max(0, dependents);
         double socialSecurityTax = grossPay * socialSecurityTaxRate;
         double federalIncomeTax = grossPay * federalIncomeTaxRate;
         double stateIncomeTax = grossPay * stateIncomeTaxRate;
-        double insuranceCost = (dependents >= 3) ? insuranceCost3OrMoreDep : insuranceCostUnder3Dep;
+        double insuranceCost = (normalizedDependents >= 3) ? insuranceCost3OrMoreDep : insuranceCostUnder3Dep;
         return socialSecurityTax + federalIncomeTax + stateIncomeTax + unionDues + insuranceCost;
     }
     public static double calculateNetPay(double grossPay, double deductions) {
